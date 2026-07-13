@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global base styles. Prefer Tailwind utility classes in components;
+   put only truly global rules or reusable @layer components here. */
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-gray-50 text-gray-900 antialiased;
+  }
+}
+
+@layer components {
+  /* Example reusable component class. Add shared UI primitives here or,
+     preferably, build them as React components in src/components/ui. */
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-lg bg-brand-primary px-4 py-2 font-semibold text-white transition hover:opacity-90 disabled:opacity-50;
+  }
+}
