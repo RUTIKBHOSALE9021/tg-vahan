@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 
 import ProtectedRoute from '@routes/ProtectedRoute';
+import PublicRoute from '@routes/PublicRoute';
 import { PATHS } from '@routes/paths';
 
 import AuthLayout from '@components/layout/AuthLayout';
@@ -8,6 +9,7 @@ import DashboardLayout from '@components/layout/DashboardLayout';
 
 // Feature pages (placeholders for now — implement inside each feature module).
 import LoginPage from '@features/auth/pages/LoginPage';
+import SignupPage from '@features/auth/pages/SignupPage';
 import DashboardPage from '@features/dashboard/pages/DashboardPage';
 import NotFoundPage from '@components/common/NotFoundPage';
 
@@ -24,11 +26,13 @@ import NotFoundPage from '@components/common/NotFoundPage';
 export default function AppRoutes() {
   return (
     <Routes>
-      {/* Public / auth routes */}
-      <Route element={<AuthLayout />}>
-        <Route path={PATHS.LOGIN} element={<LoginPage />} />
-        {/* <Route path={PATHS.REGISTER} element={<RegisterPage />} /> */}
-        {/* <Route path={PATHS.FORGOT_PASSWORD} element={<ForgotPasswordPage />} /> */}
+      {/* Public / auth routes (redirect away if already authenticated) */}
+      <Route element={<PublicRoute />}>
+        <Route element={<AuthLayout />}>
+          <Route path={PATHS.LOGIN} element={<LoginPage />} />
+          <Route path={PATHS.REGISTER} element={<SignupPage />} />
+          {/* <Route path={PATHS.FORGOT_PASSWORD} element={<ForgotPasswordPage />} /> */}
+        </Route>
       </Route>
 
       {/* Protected routes (require authentication) */}

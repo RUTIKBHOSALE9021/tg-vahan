@@ -13,23 +13,29 @@ import { baseApi } from '@services/api/baseApi';
 export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation({
-      // Login: send role + username + password.
-      // The backend echoes the role back in the response, e.g.
-      //   { token, user: { id, name, ... }, role: 'admin' | 'dealer' | 'user' }
+      // Login: POST { mobile, password, role_id }.
+      // Backend responds with an envelope:
+      //   { success, message, data: { user, accessToken, refreshToken } }
+      // transformResponse unwraps `data` so the hook returns the useful part.
       query: (credentials) => ({
         url: '/auth/login',
         method: 'POST',
-        body: credentials, // { role, username, password }
+        body: credentials, // { mobile, password, role_id }
       }),
+      transformResponse: (response) => response?.data ?? response,
       invalidatesTags: ['Auth'],
     }),
 
     register: builder.mutation({
+      // Signup: POST { fullName, email, password }.
+      // Response uses the same envelope; unwrap `data` (may include tokens for
+      // auto-login, otherwise the user proceeds to /login).
       query: (payload) => ({
         url: '/auth/register',
         method: 'POST',
-        body: payload,
+        body: payload, // { fullName, email, password }
       }),
+      transformResponse: (response) => response?.data ?? response,
     }),
 
     forgotPassword: builder.mutation({

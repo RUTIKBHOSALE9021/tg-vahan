@@ -12,11 +12,13 @@ import { createSlice } from '@reduxjs/toolkit';
  * For production, prefer httpOnly cookies to avoid XSS token theft.
  */
 const TOKEN_KEY = 'tgvahan.token';
+const REFRESH_KEY = 'tgvahan.refreshToken';
 
 const initialState = {
   user: null,
   role: null,
   token: localStorage.getItem(TOKEN_KEY) || null,
+  refreshToken: localStorage.getItem(REFRESH_KEY) || null,
 };
 
 const authSlice = createSlice({
@@ -24,17 +26,21 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     setCredentials: (state, action) => {
-      const { user, role, token } = action.payload;
+      const { user, role, token, refreshToken } = action.payload;
       state.user = user ?? null;
       state.role = role ?? null;
       state.token = token ?? null;
+      state.refreshToken = refreshToken ?? null;
       if (token) localStorage.setItem(TOKEN_KEY, token);
+      if (refreshToken) localStorage.setItem(REFRESH_KEY, refreshToken);
     },
     logout: (state) => {
       state.user = null;
       state.role = null;
       state.token = null;
+      state.refreshToken = null;
       localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem(REFRESH_KEY);
     },
   },
 });
